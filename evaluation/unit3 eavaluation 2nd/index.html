@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="./bucket.html">
+    <link rel="stylesheet" href="./bucket.html">
+  </head>
+  <style>
+    #navbar{
+      height: 60px;
+      width: 100%;
+      border: 1px solid black;
+      display: flex;
+       gap: 20px;
+      margin: auto;
+       
+    }
+
+    #cont{
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      grid-template-rows: repeat(5,300px);
+      border: 1px solid black;
+      height: 1600px;
+      gap: 20px;
+      margin-top: 80px;
+    }
+  
+    #cont>div{
+      border: 1px solid black;
+      text-align: center;
+    }
+
+    img{
+      height: 180px;
+      width: 200px;
+    }
+     
+  </style>
+
+  <body>
+    <div id="navbar">
+
+      <div>Login</div>
+      <div>signup</div>
+      <div>items</div>
+      <!--Add navbar divs here-->
+      <!-- Link to bucket.html -->
+        <a id="anc" href="./bucket.html">Bucket- <span>0</span></a>
+      <div id="">
+
+        
+        <!--Show total number of coffee added to bucket here, do not add anything only Total count. Not even "Count - 5" but like this "5" -->
+      </div>
+    </div>
+
+    <div id="cont">
+      
+      <!--Show coffee list here in grid format-->
+      <!-- add an add to bucket button to each item, give it HTML id as 'add_to_bucket' -->
+    </div>
+  </body>
+</html>
+
+ <script>
+
+   
+   async function getdata(){
+
+    let url="https://masai-mock-api.herokuapp.com/coffee/menu"
+
+    try{
+      let res=await fetch(url);
+
+      let data= await res.json();
+       return(data.menu)
+       
+    }
+    catch (err){
+         console.log(err)
+    }
+   }
+   
+  async function main(){
+
+    let data=await getdata()
+     return(data.data)
+   }
+
+   async function final(){
+    let data=await main()
+     append(data)
+   }
+
+    final()
+      var basket=JSON.parse(localStorage.getItem("basketsample"))||[];
+   function append(data)
+   {
+     let cont=document.getElementById("cont")
+     let anc=document.getElementById("anc")
+     cont.innerHTML=null
+
+     data.forEach(function(el){
+
+      let box=document.createElement("div");
+
+      let img=document.createElement("img");
+      img.src=el.image;
+
+      let title=document.createElement("p");
+       title.innerText=el.title
+
+       let rs=document.createElement("p")
+           rs.innerText= el.price;
+
+      let btn=document.createElement("button");
+        btn.innerText="Add to basaket"
+
+        btn.addEventListener("click",function(){
+           addtocart(el)
+           
+        })
+
+        
+       
+        box.append(img,title,rs,btn)
+        cont.append(box)
+       
+     })
+   }
+
+   function addtocart(el){
+      basket.push(el)
+      localStorage.setItem("basketsample",JSON.stringify(basket))
+      window.location.reload();
+      
+   }
+ </script>
