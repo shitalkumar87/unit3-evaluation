@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Voucher page</title>
+    <style>
+         #navbar{
+            display: flex;
+            background-color: aqua;
+          }
+          a{
+            margin-left: auto;
+          }
+          #voucherlist{
+                display: grid;
+                grid-template-columns: repeat(4,22%);
+                 grid-gap: 5%; 
+                 margin-top: 50px; 
+                  
+          }
+
+          img{
+              height: 300px;
+              width: 200px;
+          }
+          h3{
+            text-align: center;
+          }
+          h3{
+            margin-left: 250px;
+          }
+          
+    </style>
+  </head>
+  <body>
+
+    <div id="navbar">
+      <h3>Buy Voucher</h3>
+      <h3 id="voch">0</h3>
+      <a href="purchase.html">Purchase Voucher</a>
+    </div>
+              
+    <!-- Wallet balence id:- "wallet_balance" (only number). -->
+    <!-- - The voucher card will have class :- "voucher".
+  - All the vouchers will be appended inside div with id "voucher_list".
+  - Buy button will have class:- "buy_voucher"
+  - All the purchased voucher will be stored with key :- "purchase". -->
+
+      <div id="voucherlist"></div>
+  </body>
+</html>
+<script>
+   
+       
+       async function getdata(){
+        let url ="https://masai-vouchers-api.herokuapp.com/api/vouchers"
+        try{
+          let res= await fetch(url);
+
+          let voucher=await res.json()
+          append(voucher[0].vouchers)
+        }
+        catch(err){
+          console.log("err",err)
+        }
+       }
+
+       getdata();
+
+       let vouch=JSON.parse(localStorage.getItem("vochers"))||[];
+      let  vouchers=JSON.parse(localStorage.getItem("user"))
+      document.getElementById("voch").innerText=vouchers[0].wallet
+        // for(var i=0;i<vouch.length;i++)
+        // {
+        //       el.price++
+        // }
+
+       function append(voucher){
+         
+           let cont=document.getElementById("voucherlist");
+
+           voucher.map(function(el){
+            
+            let div=document.createElement("div")
+            
+            let img=document.createElement("img")
+              img.src=el.image
+            let name=document.createElement("p")
+               name.innerText=el.name;
+            let price=document.createElement("h2")
+             price.innerText=el.price
+
+             let btn=document.createElement("button")
+                 btn.innerText="Buy"
+              btn.addEventListener("click",function(){
+               
+                voucheradd(el)
+               
+
+              })
+
+             div.append(img,name,price,btn)
+             cont.append(div)
+
+           })
+         
+       }
+
+       function voucheradd(el){
+          
+          vouch.push(el)
+          localStorage.setItem("vochers",JSON.stringify(vouch))
+           
+       }
+</script>
